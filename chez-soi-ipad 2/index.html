@@ -34,15 +34,21 @@
   <header class="top">
     <div class="brand"><img class="logo-day" src="icons/logo.svg" alt=""><img class="logo-night" src="icons/logo-inverse.svg" alt=""><span>Chez Soi</span></div>
     <div class="top-time" id="topTime"></div>
+    <div class="weather" id="weather"><span class="weather-icon" id="weatherIcon" aria-hidden="true"></span><span id="weatherTemp">18°</span></div>
   </header>
 
   <main>
-    <!-- 1. Calme -->
+    <!-- 1. Accueil : l'heure et la prochaine chose à faire -->
     <section class="scene" data-scene="calm">
-      <div class="clock" id="clock">8h30</div>
+      <div class="hello" id="hello">Bonjour Agnès</div>
+      <div class="clock" id="clock">9h30</div>
       <div class="date" id="date"></div>
-      <div class="hello" id="hello"></div>
-      <div class="calm-text" id="calmText"></div>
+      <div class="next" id="next">
+        <span class="next-text">
+          <span class="next-when" id="nextWhen"></span>
+          <span class="next-title" id="nextTitle"></span>
+        </span>
+      </div>
     </section>
 
     <!-- 2. Rappel -->
@@ -75,7 +81,6 @@
     </section>
   </main>
 
-  <div class="cta-wrap" id="ctaWrap" hidden><button class="cta" id="cta"></button></div>
 
   <footer class="caption" id="caption" aria-live="polite">
     <span class="bars"><i></i><i></i><i></i><i></i><i></i></span>
@@ -86,7 +91,6 @@
   <div class="hz hz-prev" data-hz="prev"></div>
   <div class="hz hz-next" data-hz="next"></div>
   <div class="hz hz-home" data-hz="home"></div>
-  <div class="dot" id="dot" title="Synchro"></div>
 </div>
 
 <!-- Écran de démarrage (avant de monter sur scène) -->
@@ -95,13 +99,12 @@
   <div class="start-name">Chez Soi</div>
   <div class="start-slogan">Plus d’autonomie chez soi, plus de sérénité pour ses proches.</div>
   <button id="startBtn">Toucher pour commencer</button>
-  <div class="start-status" id="startStatus">Connexion…</div>
   <div class="start-help">
     Coin haut droit : état suivant · Coin haut gauche : état précédent<br>
-    Appui long coin bas gauche : revenir ici · Clavier : 1 à 4, flèches
+    Appui long coin bas gauche : revenir ici · Clavier : 1 à 4, flèches · Démo sans connexion
   </div>
 </div>
 
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

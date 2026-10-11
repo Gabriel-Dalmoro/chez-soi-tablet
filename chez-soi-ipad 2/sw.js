@@ -1,5 +1,5 @@
 /* Chez Soi : tout est mis en cache pour marcher sans réseau. */
-const CACHE = "chez-soi-v3";
+const CACHE = "chez-soi-v4";
 const ASSETS = [
   "./", "./index.html", "./styles.css", "./app.js", "./config.js", "./manifest.webmanifest",
   "./audio-alt/chime.mp3",
@@ -51,11 +51,4 @@ self.addEventListener("fetch", (e) => {
     );
     return;
   }
-  // SDK Firebase : cache d'abord (il ne change pas)
-  if (url.hostname === "www.gstatic.com") {
-    e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request).then((r) => {
-      const copy = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); return r;
-    })));
-  }
-  // Firestore : jamais de cache, le SDK gère lui-même le hors-ligne
 });

@@ -1,43 +1,72 @@
 # Chez Soi – la borne (iPad)
 
-## 1. Config
-`config.js` already contains the team Firebase config. Only change it if the project changes.
+Demo version: **front end only**. There is no server and no Firebase. Everything on screen comes from
+`config.js`, or from the page address (handy for screenshots and marketing videos).
 
-## 2. Put it online
-1. https://app.netlify.com/drop → drag this whole folder.
-2. On the iPad, open the link in **Safari** → Share → **Add to Home Screen**.
-3. Open it once while online (fonts, voices and Firebase get cached for offline use).
-After any change to `config.js`: drag the folder again onto the same Netlify site (Deploys tab).
+## 1. Open it (no hosting needed)
+**Double-click `index.html`.** It opens in your browser and works as is.
+To skip the start screen, add `?direct=1` to the end of the address, e.g.
+`file:///…/chez-soi-ipad 2/index.html?direct=1&heure=10h35`
 
-## 3. What the borne listens to (`foyers/demo`, team spec)
-- `borne.ecran.mode`: `calme` · `rappel` · `urgence` · `fait`
-- `titre` / `texte`: shown as-is. Only "Bonjour…" and "Bonne journée." adapt to the time of day
-  (Bonjour / Bon après-midi / Bonsoir / Bonne nuit, and Bonne soirée / Bonne nuit).
-- `voix`: read once when `depuis` changes; `null` = silent.
-- `bouton`: shown only if `showButton: true` in config.js (team choice: no button). If on, a tap
-  marks the medicine as taken (same effect as priseConfirmee, source "borne").
-- Case 7: if the console hasn't put the screen back to `calme` 11 s after `fait`, the borne does it
-  itself (`autoRetourCalme`), with the next appointment from `agenda`.
-- The borne also writes `borne.enLigne` and `borne.dernierSignal` every 20 s.
+Opened like this you get no sound (browsers block audio files from a file). Every screen looks the same.
+To get sound, run `python3 -m http.server 8000` in this folder and open http://localhost:8000.
+
+### Take a screenshot the size of an iPad (Chrome)
+1. Open the page, then press `Cmd+Option+I` (Mac) or `F12` (Windows).
+2. Click the phone/tablet icon at the top left of the panel (or press `Cmd+Shift+M`).
+3. At the top, choose **iPad Air** (or type 1180 × 820). Use the rotate icon for landscape.
+4. Click the `⋮` menu in that top bar, then **Capture screenshot**. The PNG goes to your Downloads.
+
+Ready-made screenshots are in the `screenshots/` folder (iPad Air, retina size).
+
+## 2. The 4 screens
+| Screen | Shows | Address |
+|---|---|---|
+| Home (`calme`) | Greeting, big clock, date, **the next thing to do**, weather in the corner | `?etat=calme` |
+| Reminder (`rappel`) | "Vos cachets du matin" + spoken caption | `?etat=rappel` |
+| Loved one told (`urgence`) | "Pierre va vous appeler" | `?etat=urgence` |
+| Done (`fait`) | "Merci Agnès" | `?etat=fait` |
+
+### Home screen
+- One soft-coloured card (no icon): the **next** booking only, e.g. "À 10h30, dans 1 h · L'infirmière passe".
+  Up to 15 min after it starts it says "Maintenant". When the day is done: "Tout est fait".
+- Weather: one icon and the temperature, top right. At night the sun becomes a moon.
+
+Change the bookings and the weather in `config.js` (`agenda` and `meteo`).
+Booking types (they set the card colour): `cachets`, `infirmiere`, `medecin`, `repas`, `courses`, `appel`, `visite`, `coiffeur`, `marche`.
+
+## 3. Address options (for screenshots and videos)
+By default the clock starts at 9h30 (`heureDemo` in `config.js`; set it to `null` for the real time).
+Add these to the address, joined with `&`:
+
+| Option | Example | What it does |
+|---|---|---|
+| `direct=1` | `?direct=1` | Skip the "Toucher pour commencer" screen |
+| `etat` | `etat=rappel` | Open on a screen and stay there (no auto-return) |
+| `heure` | `heure=10h25` | Set the clock. Greeting, background and next booking follow |
+| `meteo` | `meteo=pluie` | `soleil`, `eclaircies`, `nuages`, `pluie`, `neige` |
+| `temp` | `temp=7` | Temperature |
+| `moment` | `moment=nuit` | Force only the background: `matin`, `jour`, `soir`, `nuit` |
+| `prenom`, `proche` | `prenom=Jeanne&proche=Luc` | Change the names (recorded voice only works for Agnès/Pierre) |
+
+Good shots:
+- Nurse in 1 hour: `?direct=1&heure=9h30`
+- Nurse is here now: `?direct=1&heure=10h35&meteo=eclaircies`
+- Pierre calls in 5 min, rainy: `?direct=1&heure=14h55&meteo=pluie`
+- Evening pills soon: `?direct=1&heure=18h50&meteo=nuages`
+- Night, all done: `?direct=1&heure=22h40&meteo=soleil`
+- Pills reminder: `?direct=1&heure=9h00&etat=rappel`
+- Pierre told: `?direct=1&heure=9h20&etat=urgence`
+- Done: `?direct=1&heure=9h05&etat=fait`
 
 ## 4. Voice (recorded, natural)
-These exact sentences play the recorded voice; anything else is read by the iPad's French voice:
+Tap **Toucher pour commencer** first to unlock sound. These sentences play the recorded voice;
+anything else is read by the iPad's French voice:
 - Agnès, c'est l'heure de vos cachets du matin / du midi / du soir.
-- Agnès, n'oubliez pas vos cachets du matin / du midi / du soir.
 - Pierre va vous appeler.
 
-## 5. Time of day
-The calm screen follows the real time: morning (rising sun), day (sun high), evening (sunset),
-night (dark background, moon and stars). For the demo you can force one with `forcerMoment` in
-config.js, or from a laptop console: `ChezSoi.moment("soir")`.
-
-## 6. Hidden controls (work without network, change the iPad only)
-- Top-right corner: next state · Top-left corner: previous state
+## 5. Hidden controls
+- Top-right corner: next screen · Top-left corner: previous screen
 - Long-press bottom-left corner (1.5 s): back to the start screen
-- Bluetooth keyboard/clicker: `1`–`4`, arrows, space
-Test from a laptop console: `ChezSoi.simuler({ mode: "rappel", titre: "Vos cachets du soir", texte: "", voix: "…", depuis: Date.now() })`
-
-## 7. Before going on stage
-Brightness max · Auto-Lock off · volume up / Bluetooth speaker · tap **Toucher pour commencer** (unlocks sound) ·
-Guided Access on · one rehearsal with Wi-Fi off.
-Status dot (bottom-right): green = synced · orange = offline · grey = no Firebase key.
+- Keyboard / clicker: `1`–`4`, arrows, space
+- Browser console: `ChezSoi.heure("15h00")`, `ChezSoi.moment("soir")`, `ChezSoi.ecran("rappel")`
