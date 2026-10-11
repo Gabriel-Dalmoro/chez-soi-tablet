@@ -185,25 +185,21 @@ main{position:absolute; inset:0; z-index:1}
 .date{font-size:calc(var(--u)*4.8); margin-top:calc(var(--u)*1.6)}
 
 /* La prochaine chose : une seule carte, grande et claire */
-.next{display:flex; align-items:center; gap:calc(var(--u)*3); margin-top:calc(var(--u)*5); text-align:left;
-  padding:calc(var(--u)*2.4) calc(var(--u)*4.4) calc(var(--u)*2.4) calc(var(--u)*2.6); border-radius:calc(var(--u)*3.4);
-  background:rgba(255,255,255,.75); box-shadow:0 calc(var(--u)*1.2) calc(var(--u)*4) rgba(91,42,74,.10);
-  transition:background 3s ease}
-.next-icon{flex:none; width:calc(var(--u)*10); height:calc(var(--u)*10); border-radius:50%; display:grid; place-items:center;
-  background:var(--ic-bg, #F1E1EA); color:var(--ic, var(--prune))}
-.next-icon svg{width:52%; height:52%; fill:none; stroke:currentColor; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round}
-.next-text{display:flex; flex-direction:column}
+.next{display:flex; flex-direction:column; align-items:center; margin-top:calc(var(--u)*5); text-align:center;
+  padding:calc(var(--u)*2.6) calc(var(--u)*6); border-radius:calc(var(--u)*3.4);
+  background:var(--tint, #F6E8EF); transition:background 1.2s ease}
+.next-text{display:flex; flex-direction:column; align-items:center}
 .next-when{font-size:calc(var(--u)*3.3); font-weight:700; color:var(--prune)}
 .next-title{font-size:calc(var(--u)*5.4); font-weight:700; line-height:1.15; margin-top:calc(var(--u)*.4)}
-.next[data-icone="cachets"]   {--ic:#3D5CC0; --ic-bg:#E1E7FA}
+/* Une couleur douce selon le type, sans icône */
+.next[data-icone="cachets"]   {--tint:#E4EAFB}
 .next[data-icone="infirmiere"],
 .next[data-icone="medecin"],
-.next[data-icone="fini"]      {--ic:#2F8A5C; --ic-bg:#DDF0E6}
+.next[data-icone="fini"]      {--tint:#E0F1E8}
 .next[data-icone="repas"],
-.next[data-icone="courses"]   {--ic:#B9741A; --ic-bg:#FCEBCF}
-.next[data-icone="coiffeur"]  {--ic:#B5476B; --ic-bg:#FADDE6}
-.next[data-icone="marche"]    {--ic:#3E8A78; --ic-bg:#DCEFE9}
-.next[data-icone="fini"] .next-icon svg{stroke-width:3}
+.next[data-icone="courses"]   {--tint:#FCEED7}
+.next[data-icone="coiffeur"]  {--tint:#FBE3EA}
+.next[data-icone="marche"]    {--tint:#DFF0EA}
 
 /* La météo : un petit repère en haut à droite */
 .weather{display:flex; align-items:center; gap:calc(var(--u)*1.2); font-size:calc(var(--u)*4); font-weight:700;
@@ -220,7 +216,7 @@ main{position:absolute; inset:0; z-index:1}
 /* La nuit */
 #app[data-phase="nuit"] .hello{color:#F6D8A8}
 #app[data-phase="nuit"] .weather{color:#FFF5EC}
-#app[data-phase="nuit"] .next{background:rgba(255,245,236,.10); box-shadow:none}
+#app[data-phase="nuit"] .next{background:rgba(255,245,236,.10)}
 #app[data-phase="nuit"] .next-when{color:#F6D8A8}
 #app[data-phase="nuit"] .w-cloud{fill:#D9C9D3; stroke:#BFA9B8}
 

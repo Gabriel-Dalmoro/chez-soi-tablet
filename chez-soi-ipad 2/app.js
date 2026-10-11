@@ -84,14 +84,12 @@ function renderNext() {
     .sort((a, b) => a.t - b.t)[0];
   if (!next) {
     $("next").dataset.icone = "fini";
-    $("nextIcon").innerHTML = CHECK;
     $("nextWhen").textContent = "Tout est fait";
     $("nextTitle").textContent = auRevoir().replace(".", "");
     return;
   }
   const min = Math.round((next.t - t) / 60000);
   $("next").dataset.icone = next.icone || "";
-  $("nextIcon").innerHTML = svg(ICONS[next.icone] || ICONS.visite);
   $("nextWhen").textContent = min <= 0 ? "Maintenant" : `À ${hhmm(next.t)}, ${dans(min)}`;
   $("nextTitle").textContent = next.titre;
 }

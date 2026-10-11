@@ -28,12 +28,12 @@ Ready-made screenshots are in the `screenshots/` folder (iPad Air, retina size).
 | Done (`fait`) | "Merci Agnès" | `?etat=fait` |
 
 ### Home screen
-- One card: the **next** booking only, e.g. "À 10h30, dans 1 h · L'infirmière passe".
+- One soft-coloured card (no icon): the **next** booking only, e.g. "À 10h30, dans 1 h · L'infirmière passe".
   Up to 15 min after it starts it says "Maintenant". When the day is done: "Tout est fait".
 - Weather: one icon and the temperature, top right. At night the sun becomes a moon.
 
 Change the bookings and the weather in `config.js` (`agenda` and `meteo`).
-Booking icons: `cachets`, `infirmiere`, `medecin`, `repas`, `courses`, `appel`, `visite`, `coiffeur`, `marche`.
+Booking types (they set the card colour): `cachets`, `infirmiere`, `medecin`, `repas`, `courses`, `appel`, `visite`, `coiffeur`, `marche`.
 
 ## 3. Address options (for screenshots and videos)
 By default the clock starts at 9h30 (`heureDemo` in `config.js`; set it to `null` for the real time).
