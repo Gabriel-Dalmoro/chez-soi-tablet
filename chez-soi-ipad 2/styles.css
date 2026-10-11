@@ -1,0 +1,195 @@
+:root{
+  --rose:#FBEDE6; --creme:#FFFAF6; --ink:#4A2140; --soft:#80566F;
+  --prune:#5B2A4A; --on-prune:#FFF5EC; --souci:#F2A93B;
+  --menthe:#8FCDB8; --bleuet:#4C6FD6; --ok:#2F8A5C;
+  --senior:"Atkinson Hyperlegible", Verdana, sans-serif;
+  --brand:"Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --u:min(1vw, 1.4vh);            /* unité qui marche en paysage et en portrait */
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; height:100%; overflow:hidden; background:var(--creme); overscroll-behavior:none}
+body{font-family:var(--senior); color:var(--ink); -webkit-font-smoothing:antialiased;
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; touch-action:manipulation}
+
+#app{position:fixed; inset:0; overflow:hidden}
+
+/* ---------- Fonds ---------- */
+.wash{position:absolute; inset:0; opacity:0; transition:opacity 1.6s ease}
+.wash-calm{background:
+  radial-gradient(60% 70% at 88% 6%, rgba(242,169,59,.22), transparent 60%),
+  radial-gradient(70% 60% at 8% 100%, rgba(143,205,184,.16), transparent 60%),
+  linear-gradient(180deg, #FFF6EE 0%, var(--rose) 100%)}
+.wash-remind{background:linear-gradient(180deg, #EEF0FA 0%, #E2E6F7 100%)}
+.wash-remind .glow{position:absolute; left:50%; top:46%; width:120vmax; height:120vmax; translate:-50% -50%;
+  background:radial-gradient(circle, rgba(76,111,214,.28) 0%, rgba(76,111,214,.10) 35%, transparent 62%);
+  animation:breathe 4.8s ease-in-out infinite}
+.wash-alert{background:
+  radial-gradient(70% 70% at 50% 40%, rgba(143,205,184,.45), transparent 70%),
+  linear-gradient(180deg, #F1F8F4 0%, #E3F1E9 100%)}
+.wash-done{background:
+  radial-gradient(60% 60% at 50% 40%, rgba(47,138,92,.14), transparent 70%),
+  linear-gradient(180deg, #FFF6EE 0%, var(--rose) 100%)}
+#app[data-state="calm"] .wash-calm,
+#app[data-state="remind"] .wash-remind,
+#app[data-state="alert"] .wash-alert,
+#app[data-state="done"] .wash-done{opacity:1}
+@keyframes breathe{0%,100%{opacity:.55; scale:.92}50%{opacity:1; scale:1.04}}
+
+/* Le petit soleil qui respire, seulement au calme */
+.sun{position:absolute; right:7%; top:9%; width:calc(var(--u)*18); aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle, rgba(242,169,59,.55) 0%, rgba(242,169,59,.18) 45%, transparent 70%);
+  filter:blur(2px); opacity:0; transition:opacity 1.6s ease; animation:sun 7s ease-in-out infinite}
+#app[data-state="calm"] .sun{opacity:1}
+@keyframes sun{0%,100%{scale:.94}50%{scale:1.06}}
+
+/* ---------- Haut de l'écran ---------- */
+.top{position:absolute; left:0; right:0; top:0; display:flex; justify-content:space-between; align-items:center;
+  padding:calc(env(safe-area-inset-top) + var(--u)*3.2) calc(var(--u)*4.5) 0; z-index:2}
+.brand{display:flex; align-items:center; gap:calc(var(--u)*1.2); font-family:var(--brand); font-weight:700;
+  font-size:calc(var(--u)*2.6); color:var(--prune); letter-spacing:-.01em; opacity:.9}
+.brand img{width:calc(var(--u)*4.4); height:calc(var(--u)*4.4)}
+.top-time{font-size:calc(var(--u)*3.2); font-weight:700; color:var(--soft); font-variant-numeric:tabular-nums;
+  opacity:0; transition:opacity .8s}
+#app:not([data-state="calm"]):not([data-state="done"]) .top-time{opacity:1}
+
+/* ---------- Scènes ---------- */
+main{position:absolute; inset:0; z-index:1}
+.scene{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:calc(var(--u)*9) calc(var(--u)*7) calc(var(--u)*17);
+  opacity:0; transform:translateY(calc(var(--u)*1.6)) scale(.985); pointer-events:none;
+  transition:opacity .9s ease, transform 1.1s cubic-bezier(.2,.8,.2,1)}
+#app[data-state="calm"]   [data-scene="calm"],
+#app[data-state="remind"] [data-scene="remind"],
+#app[data-state="alert"]  [data-scene="alert"],
+#app[data-state="done"]   [data-scene="done"]{opacity:1; transform:none; transition-delay:.25s}
+
+.clock{font-weight:700; font-size:calc(var(--u)*27); line-height:.9; letter-spacing:-.025em; font-variant-numeric:tabular-nums}
+.date{font-size:calc(var(--u)*5.2); margin-top:calc(var(--u)*3)}
+.hello{font-size:calc(var(--u)*4.2); color:var(--soft); margin-top:calc(var(--u)*1.2)}
+
+.scene h1{font-family:var(--senior); font-weight:700; font-size:calc(var(--u)*8.6); line-height:1.05;
+  letter-spacing:-.01em; margin:calc(var(--u)*3.4) 0 0; max-width:16ch}
+.scene p{font-size:calc(var(--u)*4.6); margin:calc(var(--u)*2.4) 0 0; color:var(--ink); max-width:24ch; line-height:1.3}
+
+/* Pastilles d'icône */
+.badge{position:relative; width:calc(var(--u)*15); height:calc(var(--u)*15); border-radius:50%; display:grid; place-items:center}
+.badge svg{width:56%; height:56%}
+.badge-remind{background:var(--bleuet); box-shadow:0 calc(var(--u)*1.4) calc(var(--u)*4) rgba(76,111,214,.35)}
+.badge-remind .ring{position:absolute; inset:0; border-radius:50%; border:calc(var(--u)*.5) solid rgba(76,111,214,.45);
+  animation:ring 2.8s ease-out infinite}
+.badge-remind .ring.r2{animation-delay:1.4s}
+@keyframes ring{0%{scale:1; opacity:.9}100%{scale:1.9; opacity:0}}
+
+.badge-alert{background:var(--menthe); box-shadow:0 calc(var(--u)*1.4) calc(var(--u)*4) rgba(47,138,92,.22)}
+.badge-alert .initial{font-family:var(--senior); font-weight:700; font-size:calc(var(--u)*8.5); color:var(--ink)}
+.badge-alert .tick{position:absolute; right:-2%; bottom:-2%; width:36%; height:36%; border-radius:50%;
+  background:var(--ok); display:grid; place-items:center; border:calc(var(--u)*.7) solid #EDF6F0; scale:0}
+.badge-alert .tick svg{width:62%; height:62%}
+#app[data-state="alert"] .badge-alert .tick{animation:pop .6s 1s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes pop{to{scale:1}}
+
+.badge-done{background:transparent}
+.badge-done svg{width:100%; height:100%}
+.badge-done .c{fill:var(--ok); transform-origin:center; scale:0}
+.badge-done .k{fill:none; stroke:#fff; stroke-width:5; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:44; stroke-dashoffset:44}
+#app[data-state="done"] .badge-done .c{animation:pop .6s .3s cubic-bezier(.2,1.5,.4,1) forwards}
+#app[data-state="done"] .badge-done .k{animation:draw .6s .8s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* ---------- Sous-titre de la voix ---------- */
+.caption{position:absolute; left:50%; bottom:calc(env(safe-area-inset-bottom) + var(--u)*5); translate:-50% 0;
+  display:flex; align-items:center; gap:calc(var(--u)*1.6); z-index:2; width:max-content; max-width:86vw;
+  padding:calc(var(--u)*1.5) calc(var(--u)*3); border-radius:999px;
+  background:rgba(255,250,246,.72); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  font-size:calc(var(--u)*2.9); font-style:italic; color:var(--soft);
+  opacity:0; transform:translateY(calc(var(--u)*1)); transition:opacity .6s, transform .6s}
+.caption.on{opacity:1; transform:none}
+.bars{display:inline-flex; gap:calc(var(--u)*.45); align-items:center; height:calc(var(--u)*3)}
+.bars i{width:calc(var(--u)*.55); height:30%; border-radius:9px; background:var(--prune); animation:bar 1s ease-in-out infinite}
+.bars i:nth-child(2){animation-delay:.12s}.bars i:nth-child(3){animation-delay:.24s}
+.bars i:nth-child(4){animation-delay:.36s}.bars i:nth-child(5){animation-delay:.48s}
+@keyframes bar{0%,100%{height:30%}50%{height:100%}}
+
+/* ---------- Commandes cachées ---------- */
+.hz{position:absolute; z-index:5; width:16vmin; height:16vmin}
+.hz-prev{left:0; top:0}
+.hz-next{right:0; top:0}
+.hz-home{left:0; bottom:0}
+.dot{position:absolute; z-index:5; right:calc(var(--u)*1.6); bottom:calc(env(safe-area-inset-bottom) + var(--u)*1.6);
+  width:9px; height:9px; border-radius:50%; background:#c9bfc4; opacity:.55}
+.dot.live{background:#2F8A5C} .dot.offline{background:#E3A42B} .dot.local{background:#c9bfc4}
+
+/* ---------- Écran de démarrage ---------- */
+#start{position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:calc(var(--u)*2.4); background:linear-gradient(180deg,#FFF6EE,var(--rose)); transition:opacity .7s}
+#start.hide{opacity:0; pointer-events:none}
+.start-logo{width:calc(var(--u)*16); height:calc(var(--u)*16)}
+.start-name{font-family:var(--brand); font-weight:700; font-size:calc(var(--u)*7); color:var(--prune); letter-spacing:-.02em}
+#startBtn{margin-top:calc(var(--u)*2); border:0; border-radius:999px; background:var(--prune); color:var(--on-prune);
+  font-family:var(--senior); font-weight:700; font-size:calc(var(--u)*3.6); padding:calc(var(--u)*2) calc(var(--u)*5); cursor:pointer}
+.start-status{font-size:calc(var(--u)*2.4); color:var(--soft)}
+.start-help{position:absolute; bottom:calc(env(safe-area-inset-bottom) + var(--u)*3); font-size:calc(var(--u)*1.8);
+  color:var(--soft); opacity:.75; text-align:center; line-height:1.6}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition-duration:.01s!important}}
+
+/* Portrait : textes un peu plus grands */
+@media (orientation:portrait){ :root{--u:1.3vw} }
+
+.calm-text{font-size:calc(var(--u)*3.4); color:var(--soft); margin-top:calc(var(--u)*1.4)}
+.calm-text:empty{display:none}
+.start-slogan{font-size:calc(var(--u)*2.6); color:var(--soft); margin-top:calc(var(--u)*-1); text-align:center; max-width:80vw}
+.cta-wrap{position:absolute; left:0; right:0; bottom:calc(env(safe-area-inset-bottom) + var(--u)*13); display:flex; justify-content:center; z-index:3}
+.cta-wrap[hidden]{display:none}
+.cta{border:0; border-radius:calc(var(--u)*2.4); background:var(--prune); color:var(--on-prune); font-family:var(--senior);
+  font-weight:700; font-size:calc(var(--u)*4.4); padding:calc(var(--u)*2.2) calc(var(--u)*7); box-shadow:0 calc(var(--u)*1) calc(var(--u)*3) rgba(91,42,74,.25)}
+
+/* ================= Moments de la journée (écran calme) ================= */
+.ph{position:absolute; inset:0; opacity:0; transition:opacity 3s ease}
+.ph-matin{background:
+  radial-gradient(60% 70% at 88% 6%, rgba(242,169,59,.24), transparent 60%),
+  radial-gradient(70% 60% at 8% 100%, rgba(143,205,184,.16), transparent 60%),
+  linear-gradient(180deg, #FFF6EE 0%, #FBEDE6 100%)}
+.ph-jour{background:
+  radial-gradient(70% 60% at 55% -10%, rgba(255,214,140,.30), transparent 65%),
+  radial-gradient(60% 50% at 0% 100%, rgba(143,205,184,.14), transparent 60%),
+  linear-gradient(180deg, #FFFBF6 0%, #FDF3EC 100%)}
+.ph-soir{background:
+  radial-gradient(80% 60% at 85% 100%, rgba(242,140,90,.30), transparent 65%),
+  radial-gradient(60% 50% at 10% 0%, rgba(160,110,150,.18), transparent 60%),
+  linear-gradient(180deg, #FBE3DC 0%, #F6D3C8 100%)}
+.ph-nuit{background:
+  radial-gradient(60% 50% at 80% 10%, rgba(255,245,236,.10), transparent 60%),
+  linear-gradient(180deg, #3A2036 0%, #2B1828 100%)}
+#app[data-phase="matin"] .ph-matin, #app[data-phase="jour"] .ph-jour,
+#app[data-phase="soir"] .ph-soir, #app[data-phase="nuit"] .ph-nuit{opacity:1}
+
+/* Le soleil se déplace : levant le matin, haut la journée, couchant le soir */
+.sun{transition:opacity 3s ease, top 4s ease, right 4s ease, width 4s ease, background 4s ease}
+#app[data-phase="jour"] .sun{right:44%; top:-7%; width:calc(var(--u)*26);
+  background:radial-gradient(circle, rgba(255,214,140,.55) 0%, rgba(255,214,140,.16) 45%, transparent 70%)}
+#app[data-phase="soir"] .sun{right:6%; top:62%; width:calc(var(--u)*30);
+  background:radial-gradient(circle, rgba(240,128,80,.50) 0%, rgba(240,128,80,.16) 45%, transparent 70%)}
+#app[data-phase="nuit"] .sun{opacity:0 !important}
+
+/* La nuit : une lune et quelques étoiles, textes clairs */
+.moon{position:absolute; right:5.5%; top:calc(env(safe-area-inset-top) + 3%); width:calc(var(--u)*5.5); aspect-ratio:1; border-radius:50%;
+  background:transparent; box-shadow:inset calc(var(--u)*-1.5) calc(var(--u)*.6) 0 0 #FFF5EC;
+  filter:drop-shadow(0 0 calc(var(--u)*2) rgba(255,245,236,.35)); opacity:0; transition:opacity 3s ease}
+.stars{position:absolute; inset:0; opacity:0; transition:opacity 3s ease; pointer-events:none}
+.stars i{position:absolute; width:3px; height:3px; border-radius:50%; background:#FFF5EC; animation:twinkle 4s ease-in-out infinite}
+.stars i:nth-child(2n){animation-delay:1.3s} .stars i:nth-child(3n){animation-delay:2.4s}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+#app[data-state="calm"][data-phase="nuit"] .moon,
+#app[data-state="calm"][data-phase="nuit"] .stars{opacity:1}
+
+.logo-night{display:none}
+#app[data-state="calm"][data-phase="nuit"] .logo-day{display:none}
+#app[data-state="calm"][data-phase="nuit"] .logo-night{display:block}
+#app[data-state="calm"][data-phase="nuit"] .brand{color:#FFF5EC}
+#app[data-state="calm"][data-phase="nuit"] [data-scene="calm"]{color:#FFF5EC}
+#app[data-state="calm"][data-phase="nuit"] .hello,
+#app[data-state="calm"][data-phase="nuit"] .calm-text{color:#E9C7B8}
+[data-scene="calm"]{transition:opacity .9s ease, transform 1.1s cubic-bezier(.2,.8,.2,1), color 3s ease}
+.dot{transition:background .5s}

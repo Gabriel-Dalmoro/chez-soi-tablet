@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chez Soi">
+<meta name="theme-color" content="#FBEDE6">
+<title>Chez Soi</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+</head>
+<body>
+
+<div id="app" data-state="calm">
+
+  <!-- Fonds : un calque par état, en fondu -->
+  <div class="wash wash-calm">
+    <div class="ph ph-matin"></div><div class="ph ph-jour"></div><div class="ph ph-soir"></div><div class="ph ph-nuit"></div>
+  </div>
+  <div class="wash wash-remind"><div class="glow"></div></div>
+  <div class="wash wash-alert"></div>
+  <div class="wash wash-done"></div>
+  <div class="sun" aria-hidden="true"></div>
+  <div class="moon" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"><i style="left:12%;top:14%"></i><i style="left:24%;top:30%"></i><i style="left:38%;top:9%"></i><i style="left:61%;top:22%"></i><i style="left:70%;top:8%"></i><i style="left:8%;top:52%"></i><i style="left:90%;top:44%"></i><i style="left:53%;top:6%"></i></div>
+
+  <header class="top">
+    <div class="brand"><img class="logo-day" src="icons/logo.svg" alt=""><img class="logo-night" src="icons/logo-inverse.svg" alt=""><span>Chez Soi</span></div>
+    <div class="top-time" id="topTime"></div>
+  </header>
+
+  <main>
+    <!-- 1. Calme -->
+    <section class="scene" data-scene="calm">
+      <div class="clock" id="clock">8h30</div>
+      <div class="date" id="date"></div>
+      <div class="hello" id="hello"></div>
+      <div class="calm-text" id="calmText"></div>
+    </section>
+
+    <!-- 2. Rappel -->
+    <section class="scene" data-scene="remind">
+      <div class="badge badge-remind">
+        <span class="ring"></span><span class="ring r2"></span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><g transform="rotate(-35 24 24)"><rect x="7" y="16.5" width="34" height="15" rx="7.5" fill="none" stroke="#fff" stroke-width="3.4"/><path d="M24 16.5h9.5a7.5 7.5 0 0 1 0 15H24z" fill="#fff"/></g></svg>
+      </div>
+      <h1 id="remindTitle">Vos cachets du matin</h1>
+      <p id="remindBody">Ils vous attendent dans le pilulier.</p>
+    </section>
+
+    <!-- 3. Proche prévenu -->
+    <section class="scene" data-scene="alert">
+      <div class="badge badge-alert">
+        <span class="initial" id="initial">P</span>
+        <span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <h1 id="alertTitle">Pierre est prévenu</h1>
+      <p id="alertBody">Il sait que vos cachets du matin vous attendent.</p>
+    </section>
+
+    <!-- 4. C'est fait -->
+    <section class="scene" data-scene="done">
+      <div class="badge badge-done">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle class="c" cx="32" cy="32" r="28"/><path class="k" d="M19 33.5l9 9L46 24"/></svg>
+      </div>
+      <h1 id="doneTitle">Merci Agnès</h1>
+      <p id="doneBody">Bonne matinée.</p>
+    </section>
+  </main>
+
+  <div class="cta-wrap" id="ctaWrap" hidden><button class="cta" id="cta"></button></div>
+
+  <footer class="caption" id="caption" aria-live="polite">
+    <span class="bars"><i></i><i></i><i></i><i></i><i></i></span>
+    <span id="captionText"></span>
+  </footer>
+
+  <!-- Commandes cachées (invisibles sur scène) -->
+  <div class="hz hz-prev" data-hz="prev"></div>
+  <div class="hz hz-next" data-hz="next"></div>
+  <div class="hz hz-home" data-hz="home"></div>
+  <div class="dot" id="dot" title="Synchro"></div>
+</div>
+
+<!-- Écran de démarrage (avant de monter sur scène) -->
+<div id="start">
+  <img src="icons/logo.svg" alt="" class="start-logo">
+  <div class="start-name">Chez Soi</div>
+  <div class="start-slogan">Plus d’autonomie chez soi, plus de sérénité pour ses proches.</div>
+  <button id="startBtn">Toucher pour commencer</button>
+  <div class="start-status" id="startStatus">Connexion…</div>
+  <div class="start-help">
+    Coin haut droit : état suivant · Coin haut gauche : état précédent<br>
+    Appui long coin bas gauche : revenir ici · Clavier : 1 à 4, flèches
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
