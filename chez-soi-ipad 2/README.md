@@ -3,33 +3,39 @@
 Demo version: **front end only**. There is no server and no Firebase. Everything on screen comes from
 `config.js`, or from the page address (handy for screenshots and marketing videos).
 
-## 1. Run it
-- On a laptop: `python3 -m http.server 8000` in this folder, then open http://localhost:8000
-- On an iPad: drag this folder onto https://app.netlify.com/drop, open the link in **Safari** →
-  Share → **Add to Home Screen**.
+## 1. Open it (no hosting needed)
+**Double-click `index.html`.** It opens in your browser and works as is.
+To skip the start screen, add `?direct=1` to the end of the address, e.g.
+`file:///…/chez-soi-ipad 2/index.html?direct=1&heure=10h35`
+
+Opened like this you get no sound (browsers block audio files from a file). Every screen looks the same.
+To get sound, run `python3 -m http.server 8000` in this folder and open http://localhost:8000.
+
+### Take a screenshot the size of an iPad (Chrome)
+1. Open the page, then press `Cmd+Option+I` (Mac) or `F12` (Windows).
+2. Click the phone/tablet icon at the top left of the panel (or press `Cmd+Shift+M`).
+3. At the top, choose **iPad Air** (or type 1180 × 820). Use the rotate icon for landscape.
+4. Click the `⋮` menu in that top bar, then **Capture screenshot**. The PNG goes to your Downloads.
+
+Ready-made screenshots are in the `screenshots/` folder (iPad Air, retina size).
 
 ## 2. The 4 screens
 | Screen | Shows | Address |
 |---|---|---|
-| Home (`calme`) | Big clock, date, greeting, **weather card**, **today's bookings** | `?etat=calme` |
+| Home (`calme`) | Greeting, big clock, date, **the next thing to do**, weather in the corner | `?etat=calme` |
 | Reminder (`rappel`) | "Vos cachets du matin" + spoken caption | `?etat=rappel` |
 | Loved one told (`urgence`) | "Pierre va vous appeler" | `?etat=urgence` |
 | Done (`fait`) | "Merci Agnès" | `?etat=fait` |
 
 ### Home screen
-- **Aujourd'hui**: one line per booking: time, icon, title, small detail.
-  - Past ones turn soft with a green tick.
-  - The next one gets a dark frame and a tag: "Dans 1 h", "Dans 10 min".
-  - One that has just started (up to 15 min) gets an orange "Maintenant" tag.
-  - Top-right counter: "Encore 3 choses" / "Tout est fait".
-  - The list never scrolls. If the screen is too small, finished items are hidden first.
-- **Weather**: temperature, sky, max/min and a short tip ("Pensez au parapluie.").
-  At night the sun becomes a moon.
+- One card: the **next** booking only, e.g. "À 10h30, dans 1 h · L'infirmière passe".
+  Up to 15 min after it starts it says "Maintenant". When the day is done: "Tout est fait".
+- Weather: one icon and the temperature, top right. At night the sun becomes a moon.
 
 Change the bookings and the weather in `config.js` (`agenda` and `meteo`).
 Booking icons: `cachets`, `infirmiere`, `medecin`, `repas`, `courses`, `appel`, `visite`, `coiffeur`, `marche`.
 
-## 3. Screenshots and videos (address options)
+## 3. Address options (for screenshots and videos)
 By default the clock starts at 9h30 (`heureDemo` in `config.js`; set it to `null` for the real time).
 Add these to the address, joined with `&`:
 
@@ -37,21 +43,21 @@ Add these to the address, joined with `&`:
 |---|---|---|
 | `direct=1` | `?direct=1` | Skip the "Toucher pour commencer" screen |
 | `etat` | `etat=rappel` | Open on a screen and stay there (no auto-return) |
-| `heure` | `heure=10h25` | Set the clock. Everything follows: greeting, background, bookings, "Dans …" |
+| `heure` | `heure=10h25` | Set the clock. Greeting, background and next booking follow |
 | `meteo` | `meteo=pluie` | `soleil`, `eclaircies`, `nuages`, `pluie`, `neige` |
 | `temp` | `temp=7` | Temperature |
 | `moment` | `moment=nuit` | Force only the background: `matin`, `jour`, `soir`, `nuit` |
 | `prenom`, `proche` | `prenom=Jeanne&proche=Luc` | Change the names (recorded voice only works for Agnès/Pierre) |
 
-Good shots to grab:
-- Morning, nurse coming: `?direct=1&heure=9h30`
+Good shots:
+- Nurse in 1 hour: `?direct=1&heure=9h30`
 - Nurse is here now: `?direct=1&heure=10h35&meteo=eclaircies`
-- Evening, last pills soon: `?direct=1&heure=18h50`
-- Night, all done: `?direct=1&heure=22h40&meteo=nuages`
-- Pills reminder with caption: `?direct=1&heure=9h00&etat=rappel`
-- Rainy afternoon (portrait): `?direct=1&heure=14h55&meteo=pluie`
-
-Best sizes: 1180×820 (iPad Air, landscape), 1024×768, or portrait 820×1180.
+- Pierre calls in 5 min, rainy: `?direct=1&heure=14h55&meteo=pluie`
+- Evening pills soon: `?direct=1&heure=18h50&meteo=nuages`
+- Night, all done: `?direct=1&heure=22h40&meteo=soleil`
+- Pills reminder: `?direct=1&heure=9h00&etat=rappel`
+- Pierre told: `?direct=1&heure=9h20&etat=urgence`
+- Done: `?direct=1&heure=9h05&etat=fait`
 
 ## 4. Voice (recorded, natural)
 Tap **Toucher pour commencer** first to unlock sound. These sentences play the recorded voice;

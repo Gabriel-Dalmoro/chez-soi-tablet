@@ -33,8 +33,7 @@ const salut = () => { const h = hour(); return h >= 5 && h < 12 ? "Bonjour" : h 
 const auRevoir = () => { const p = phase(); return p === "soir" ? "Bonne soirée." : p === "nuit" ? "Bonne nuit." : "Bonne journée."; };
 const libelleMoment = () => { const h = hour(); return h < 11 ? "matin" : h < 16 ? "midi" : "soir"; };
 const hhmm = (t = now()) => { const d = new Date(t); return `${d.getHours()}h${String(d.getMinutes()).padStart(2, "0")}`; };
-const cap = (s) => s[0].toUpperCase() + s.slice(1);
-const today = () => { const d = new Date(now()); return `<b>${cap(d.toLocaleDateString("fr-FR", { weekday: "long" }))}</b>${d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}`; };
+const today = () => { const s = new Date(now()).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }); return s[0].toUpperCase() + s.slice(1); };
 
 /* ---------- Icônes ---------- */
 const svg = (inner, vb = "0 0 24 24") => `<svg viewBox="${vb}" aria-hidden="true">${inner}</svg>`;
@@ -53,81 +52,48 @@ const CHECK = svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>');
 
 const SUN   = '<g class="w-sun"><circle cx="32" cy="32" r="11"/><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4.2 4.2M44.8 44.8L49 49M15 49l4.2-4.2M44.8 19.2L49 15"/></g>';
 const MOON  = '<path class="w-moon" d="M40 12a20 20 0 1 0 12 30A16 16 0 0 1 40 12z"/>';
-const CLOUD = (y = 0, cls = "w-cloud") => `<path class="${cls}" transform="translate(0 ${y})" d="M20 50h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A11 11 0 0 0 20 50z"/>`;
+const CLOUD = (y = 0) => `<path class="w-cloud" transform="translate(0 ${y})" d="M20 50h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A11 11 0 0 0 20 50z"/>`;
 const WEATHER = {
-  soleil:     { label: "Grand soleil", art: (n) => n ? MOON : SUN,  tip: "Une petite veste suffit." },
-  eclaircies: { label: "Éclaircies",   art: (n) => `<g transform="translate(10 -8) scale(.75)">${n ? MOON : SUN}</g>` + CLOUD(4), tip: "Prenez un gilet si vous sortez." },
-  nuages:     { label: "Nuageux",      art: () => `<g transform="translate(8 -10) scale(.7)">${CLOUD(0, "w-cloud2")}</g>` + CLOUD(4), tip: "Un temps calme pour sortir." },
-  pluie:      { label: "Pluie",        art: () => CLOUD(-6) + '<path class="w-drop" d="M24 50l-3 7M34 50l-3 7M44 50l-3 7"/>', tip: "Pensez au parapluie." },
-  neige:      { label: "Neige",        art: () => CLOUD(-6) + '<g class="w-snow"><circle cx="23" cy="54" r="2.4"/><circle cx="33" cy="58" r="2.4"/><circle cx="43" cy="54" r="2.4"/></g>', tip: "Restez au chaud, ça glisse dehors." },
+  soleil:     (n) => n ? MOON : SUN,
+  eclaircies: (n) => `<g transform="translate(10 -8) scale(.75)">${n ? MOON : SUN}</g>` + CLOUD(4),
+  nuages:     () => CLOUD(),
+  pluie:      () => CLOUD(-6) + '<path class="w-drop" d="M24 50l-3 7M34 50l-3 7M44 50l-3 7"/>',
+  neige:      () => CLOUD(-6) + '<g class="w-snow"><circle cx="23" cy="54" r="2.4"/><circle cx="33" cy="58" r="2.4"/><circle cx="43" cy="54" r="2.4"/></g>',
 };
 
-/* ---------- Météo ---------- */
+/* ---------- Météo : une icône et la température, rien de plus ---------- */
 function renderWeather() {
-  const m = { ...C.meteo };
-  if (Q.get("meteo")) m.ciel = Q.get("meteo");
-  if (Q.get("temp")) m.temp = +Q.get("temp");
-  if (Q.get("ville")) m.ville = Q.get("ville");
-  const w = WEATHER[m.ciel] || WEATHER.soleil;
-  const night = phase() === "nuit";
-  $("weatherIcon").innerHTML = svg(w.art(night), "0 0 64 64");
-  $("weatherTemp").textContent = `${Math.round(m.temp)}°`;
-  $("weatherSky").textContent = night && m.ciel === "soleil" ? "Ciel dégagé" : w.label;
-  $("weatherRange").textContent = night ? `Cette nuit ${m.min}°` : `Max ${m.max}° · Min ${m.min}°`;
-  $("weatherTip").textContent = m.conseil || (night ? "Bonne nuit, au chaud." : w.tip);
-  app.dataset.sky = m.ciel;
+  const ciel = Q.get("meteo") || C.meteo.ciel;
+  const temp = Q.has("temp") ? +Q.get("temp") : C.meteo.temp;
+  $("weatherIcon").innerHTML = svg((WEATHER[ciel] || WEATHER.soleil)(phase() === "nuit"), "0 0 64 64");
+  $("weatherTemp").textContent = `${Math.round(temp)}°`;
 }
 
-/* ---------- La journée ---------- */
-const MAX_ROWS = 5;
-const SOON_MIN = 15;     // « Maintenant » : jusqu'à 15 min après l'heure du rendez-vous
-function duree(min) {
-  if (min < 60) return `Dans ${min} min`;
+/* ---------- La prochaine chose à faire (une seule) ---------- */
+const SOON_MIN = 15;     // « Maintenant » : jusqu'à 15 min après l'heure prévue
+function dans(min) {
+  if (min < 60) return `dans ${min} min`;
   const h = Math.floor(min / 60), r = min % 60;
-  return r ? `Dans ${h} h ${String(r).padStart(2, "0")}` : `Dans ${h} h`;
+  return r ? `dans ${h} h ${String(r).padStart(2, "0")}` : `dans ${h} h`;
 }
-function agenda() {
-  return (C.agenda || [])
+function renderNext() {
+  const t = now();
+  const next = (C.agenda || [])
     .map((r) => ({ ...r, t: atToday(parseHeure(r.heure) || [0, 0]) }))
-    .sort((a, b) => a.t - b.t);
-}
-function renderDay() {
-  const list = agenda(), t = now();
-  const past = (r) => r.t + SOON_MIN * 60000 < t;
-  const firstOpen = list.findIndex((r) => !past(r));
-  const nextIdx = list.findIndex((r) => r.t > t);
-  const start = Math.max(0, Math.min((firstOpen < 0 ? list.length : firstOpen) - 1, list.length - MAX_ROWS));
-  const rows = list.slice(start, start + MAX_ROWS);
-
-  $("dayList").innerHTML = rows.map((r) => {
-    const i = list.indexOf(r);
-    const isPast = past(r), isNow = !isPast && r.t <= t, isNext = i === nextIdx;
-    const cls = isPast ? "is-past" : isNow ? "is-now" : isNext ? "is-next" : "";
-    const chip = isPast ? ""
-               : isNow  ? `<span class="chip chip-now">Maintenant</span>`
-               : isNext ? `<span class="chip chip-next">${duree(Math.round((r.t - t) / 60000))}</span>` : "";
-    return `<li class="row ${cls}" data-icone="${r.icone || ""}">
-      <span class="row-time">${hhmm(r.t)}</span>
-      <span class="row-icon">${isPast ? CHECK : svg(ICONS[r.icone] || ICONS.visite)}</span>
-      <span class="row-text"><span class="row-title">${r.titre}</span>${r.detail ? `<span class="row-detail">${r.detail}</span>` : ""}</span>
-      ${chip}
-    </li>`;
-  }).join("");
-  fitRows();
-  const left = list.filter((r) => !past(r)).length;
-  $("dayCount").textContent = !list.length ? "" : left === 0 ? "Tout est fait" : left === 1 ? "Encore 1 chose" : `Encore ${left} choses`;
-  $("dayEmpty").hidden = list.length > 0;
-}
-
-/* Jamais de défilement : si l'écran est trop petit, on garde les lignes qui tiennent. */
-function fitRows() {
-  const box = $("dayList"); if (!box.offsetParent) return;
-  const bottom = box.getBoundingClientRect().bottom + 1;
-  const over = () => box.lastElementChild && box.lastElementChild.getBoundingClientRect().bottom > bottom;
-  while (box.children.length > 2 && over()) {          // d'abord ce qui est déjà fait, puis la fin de journée
-    const first = box.firstElementChild;
-    (first.classList.contains("is-past") ? first : box.lastElementChild).remove();
+    .filter((r) => r.t + SOON_MIN * 60000 >= t)
+    .sort((a, b) => a.t - b.t)[0];
+  if (!next) {
+    $("next").dataset.icone = "fini";
+    $("nextIcon").innerHTML = CHECK;
+    $("nextWhen").textContent = "Tout est fait";
+    $("nextTitle").textContent = auRevoir().replace(".", "");
+    return;
   }
+  const min = Math.round((next.t - t) / 60000);
+  $("next").dataset.icone = next.icone || "";
+  $("nextIcon").innerHTML = svg(ICONS[next.icone] || ICONS.visite);
+  $("nextWhen").textContent = min <= 0 ? "Maintenant" : `À ${hhmm(next.t)}, ${dans(min)}`;
+  $("nextTitle").textContent = next.titre;
 }
 
 /* ---------- Affichage ---------- */
@@ -143,7 +109,7 @@ function texts(state) {
 
 function render(state) {
   const d = texts(state);
-  if (state === "calm")   { $("hello").textContent = d.titre; renderWeather(); renderDay(); }
+  if (state === "calm")   { $("hello").textContent = d.titre; renderWeather(); renderNext(); }
   if (state === "remind") { $("remindTitle").textContent = d.titre; $("remindBody").textContent = d.texte; }
   if (state === "alert")  { $("alertTitle").textContent = d.titre;  $("alertBody").textContent = d.texte; }
   if (state === "done")   { $("doneTitle").textContent = d.titre;   $("doneBody").textContent = d.texte; }
@@ -153,7 +119,7 @@ function render(state) {
 
 function tick() {
   $("clock").textContent = hhmm();
-  $("date").innerHTML = today();
+  $("date").textContent = today();
   app.dataset.phase = phase();
   render(current);
 }
@@ -292,5 +258,4 @@ const skipStart = Q.get("direct") === "1" || C.ecranDemarrage === false;
 if (skipStart) $("start").classList.add("hide");
 const first = FROM_PARAM[Q.get("etat")] || "calm";
 tick();
-if (document.fonts) document.fonts.ready.then(() => render(current));   // re-mesure avec la vraie police
 show(first, { voix: hold && first !== "calm" });

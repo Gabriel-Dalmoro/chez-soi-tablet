@@ -13,20 +13,18 @@ window.CGM_CONFIG = {
   /* 2. Les prénoms */
   names: { senior: "Agnès", proche: "Pierre" },
 
-  /* 3. Les rendez-vous du jour (écran d'accueil)
+  /* 3. Les rendez-vous du jour. L'accueil montre seulement le prochain.
         icone : cachets | infirmiere | repas | appel | coiffeur | medecin | marche | visite | courses */
   agenda: [
-    { heure: "8h00",  titre: "Cachets du matin",   detail: "Dans le pilulier",        icone: "cachets" },
-    { heure: "10h30", titre: "Infirmière Sophie",  detail: "Elle vient à la maison",  icone: "infirmiere" },
-    { heure: "12h00", titre: "Déjeuner livré",      detail: "Les repas de la mairie",  icone: "repas" },
-    { heure: "15h00", titre: "Appel avec Pierre",  detail: "Sur la tablette",         icone: "appel" },
-    { heure: "19h00", titre: "Cachets du soir",    detail: "Dans le pilulier",        icone: "cachets" }
+    { heure: "8h00",  titre: "Vos cachets du matin", icone: "cachets" },
+    { heure: "10h30", titre: "L’infirmière passe",   icone: "infirmiere" },
+    { heure: "12h00", titre: "Le déjeuner arrive",   icone: "repas" },
+    { heure: "15h00", titre: "Pierre vous appelle",  icone: "appel" },
+    { heure: "19h00", titre: "Vos cachets du soir",  icone: "cachets" }
   ],
 
-  /* 4. La météo (valeurs fixes pour la démo)
-        ciel : soleil | eclaircies | nuages | pluie | neige
-        conseil : la petite phrase en dessous (null = choisie selon le temps) */
-  meteo: { ville: "Annecy", temp: 18, ciel: "soleil", max: 21, min: 9, conseil: null },
+  /* 4. La météo (en haut à droite). ciel : soleil | eclaircies | nuages | pluie | neige */
+  meteo: { temp: 18, ciel: "soleil" },
 
   /* 5. Comportement */
   doneReturnsToCalmAfterMs: 9000,   // après « C'est fait », retour doux à l'accueil

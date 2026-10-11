@@ -34,33 +34,21 @@
   <header class="top">
     <div class="brand"><img class="logo-day" src="icons/logo.svg" alt=""><img class="logo-night" src="icons/logo-inverse.svg" alt=""><span>Chez Soi</span></div>
     <div class="top-time" id="topTime"></div>
+    <div class="weather" id="weather"><span class="weather-icon" id="weatherIcon" aria-hidden="true"></span><span id="weatherTemp">18°</span></div>
   </header>
 
   <main>
-    <!-- 1. Accueil : l'heure, la météo et la journée -->
+    <!-- 1. Accueil : l'heure et la prochaine chose à faire -->
     <section class="scene" data-scene="calm">
-      <div class="home">
-        <div class="home-now">
-          <div class="hello" id="hello">Bonjour Agnès</div>
-          <div class="clock" id="clock">9h30</div>
-          <div class="date" id="date"></div>
-          <div class="weather" id="weather">
-            <div class="weather-icon" id="weatherIcon" aria-hidden="true"></div>
-            <div class="weather-main">
-              <div class="weather-temp"><span id="weatherTemp">18°</span><span class="weather-sky" id="weatherSky">Grand soleil</span></div>
-              <div class="weather-range" id="weatherRange">Jusqu’à 21° · ce soir 9°</div>
-            </div>
-            <div class="weather-tip" id="weatherTip">Une petite veste suffit.</div>
-          </div>
-        </div>
-        <div class="day">
-          <div class="day-head">
-            <h2>Aujourd’hui</h2>
-            <span class="day-count" id="dayCount"></span>
-          </div>
-          <ol class="day-list" id="dayList"></ol>
-          <div class="day-empty" id="dayEmpty" hidden>Rien de prévu aujourd’hui.<br>Profitez bien de votre journée.</div>
-        </div>
+      <div class="hello" id="hello">Bonjour Agnès</div>
+      <div class="clock" id="clock">9h30</div>
+      <div class="date" id="date"></div>
+      <div class="next" id="next">
+        <span class="next-icon" id="nextIcon"></span>
+        <span class="next-text">
+          <span class="next-when" id="nextWhen"></span>
+          <span class="next-title" id="nextTitle"></span>
+        </span>
       </div>
     </section>
 
@@ -118,6 +106,6 @@
   </div>
 </div>
 
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
